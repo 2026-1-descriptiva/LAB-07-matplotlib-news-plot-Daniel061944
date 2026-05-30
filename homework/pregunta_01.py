@@ -4,8 +4,12 @@ Escriba el codigo que ejecute la accion solicitada en cada pregunta.
 
 # pylint: disable=import-outside-toplevel
 
+import os
+
 import pandas as pd
 import matplotlib.pyplot as plt
+
+
 def pregunta_01():
     """
     Siga las instrucciones del video https://youtu.be/qVdwpxG_JpE para
@@ -15,9 +19,11 @@ def pregunta_01():
     este repo.
 
     El gráfico debe salvarse al archivo `files/plots/news.png`.
-
     """
 
+    os.makedirs("files/plots", exist_ok=True)
+
+    df = pd.read_csv("files/input/news.csv", index_col=0)
 
     plt.figure()
 
@@ -42,8 +48,6 @@ def pregunta_01():
         "Radio": 2,
     }
 
-    df = pd.read_csv("news.csv", index_col=0)
-
     for col in df.columns:
         plt.plot(
             df[col],
@@ -62,35 +66,35 @@ def pregunta_01():
 
     for col in df.columns:
         first_year = df.index[0]
+        last_year = df.index[-1]
 
         plt.scatter(
             x=first_year,
-            y=df[col][first_year],
+            y=df.loc[first_year, col],
             color=colors[col],
             zorder=zorder[col],
         )
 
         plt.text(
             first_year - 0.2,
-            df[col][first_year],
-            col + " " + str(df[col][first_year]) + "%",
+            df.loc[first_year, col],
+            col + " " + str(df.loc[first_year, col]) + "%",
             ha="right",
             va="center",
             color=colors[col],
         )
 
-        last_year = df.index[-1]
-
         plt.scatter(
             x=last_year,
-            y=df[col][last_year],
+            y=df.loc[last_year, col],
             color=colors[col],
+            zorder=zorder[col],
         )
 
         plt.text(
             last_year + 0.2,
-            df[col][last_year],
-            str(df[col][last_year]) + "%",
+            df.loc[last_year, col],
+            str(df.loc[last_year, col]) + "%",
             ha="left",
             va="center",
             color=colors[col],
@@ -103,5 +107,5 @@ def pregunta_01():
     )
 
     plt.tight_layout()
-    plt.savefig("news.png")
-    plt.show()
+    plt.savefig("files/plots/news.png")
+    plt.close()
